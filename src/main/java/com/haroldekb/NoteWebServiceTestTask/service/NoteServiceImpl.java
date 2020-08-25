@@ -43,13 +43,13 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public void deleteNoteById(Integer id) {
-        if (isExistsById(id)) {
+        if (doExistById(id)) {
             repository.deleteById(id);
         }
     }
 
     @Override
-    public boolean isExistsById(Integer id) {
+    public boolean doExistById(Integer id) {
         return repository.existsById(id);
     }
 }

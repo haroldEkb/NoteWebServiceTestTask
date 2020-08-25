@@ -5,9 +5,7 @@ import com.haroldekb.NoteWebServiceTestTask.service.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -32,7 +30,7 @@ public class NoteController {
         List<Note> notes = new ArrayList<>();
         notes.add(new Note("123", "qweqwe"));
         notes.add(new Note("456", "asdsafd"));
-        notes.add(new Note("789", "xvcxcxvvcx"));
+        notes.add(new Note("", "xvcxcxvvcx"));
         service.saveAll(notes);
     }
 
@@ -47,6 +45,18 @@ public class NoteController {
     @GetMapping("/delete")
     public String deleteNote(@RequestParam("id")  Integer id, Model model){
         service.deleteNoteById(id);
+        return "redirect:/";
+    }
+
+    @GetMapping("/add")
+    public String newNoteForm(Model model){
+        model.addAttribute("note", new Note());
+        return "add_note";
+    }
+
+    @PostMapping("/add")
+    public String addNote(@ModelAttribute(name = "note") Note newNote){
+        service.save(newNote);
         return "redirect:/";
     }
 }

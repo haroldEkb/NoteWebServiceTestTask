@@ -15,5 +15,5 @@ public interface NoteService {
 
     void deleteNoteById(Integer id);
 
-    boolean isExistsById(Integer id);
+    boolean doExistById(Integer id);
 }
