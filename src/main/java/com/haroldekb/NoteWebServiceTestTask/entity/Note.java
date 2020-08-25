@@ -1,6 +1,7 @@
 package com.haroldekb.NoteWebServiceTestTask.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * @author haroldekb@mail.ru
@@ -56,5 +57,20 @@ public class Note {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Note note = (Note) o;
+        return getId().equals(note.getId()) &&
+                getName().equals(note.getName()) &&
+                getContent().equals(note.getContent());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getContent());
     }
 }
