@@ -10,4 +10,10 @@ public interface NoteService {
     void save(Note note);
 
     void saveAll(List<Note> notes);
+
+    Note findNoteById(Integer id);
+
+    void deleteNoteById(Integer id);
+
+    boolean isExistsById(Integer id);
 }

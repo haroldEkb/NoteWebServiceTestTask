@@ -5,7 +5,9 @@ import com.haroldekb.NoteWebServiceTestTask.service.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -35,9 +37,16 @@ public class NoteController {
     }
 
     @GetMapping("/")
-    public String index(Model model){
+    public String showAllNotes(Model model){
         List<Note> notes = service.getAllNotes();
         model.addAttribute("notes", notes);
         return "index";
+    }
+
+    //Нужно ли сообщать клиенту, что такой записи не было?
+    @GetMapping("/delete")
+    public String deleteNote(@RequestParam("id")  Integer id, Model model){
+        service.deleteNoteById(id);
+        return "redirect:/";
     }
 }

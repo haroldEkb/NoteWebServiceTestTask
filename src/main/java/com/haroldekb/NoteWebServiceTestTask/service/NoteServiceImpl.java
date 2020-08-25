@@ -35,4 +35,21 @@ public class NoteServiceImpl implements NoteService {
     public void saveAll(List<Note> notes) {
         repository.saveAll(notes);
     }
+
+    @Override
+    public Note findNoteById(Integer id) {
+        return repository.findById(id).orElse(new Note());
+    }
+
+    @Override
+    public void deleteNoteById(Integer id) {
+        if (isExistsById(id)) {
+            repository.deleteById(id);
+        }
+    }
+
+    @Override
+    public boolean isExistsById(Integer id) {
+        return repository.existsById(id);
+    }
 }
