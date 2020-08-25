@@ -52,4 +52,9 @@ public class NoteServiceImpl implements NoteService {
     public boolean doExistById(Integer id) {
         return repository.existsById(id);
     }
+
+    @Override
+    public List<Note> searchContaining(String search) {
+        return repository.findByNameContainingIgnoreCaseOrContentContainingIgnoreCase(search, search);
+    }
 }

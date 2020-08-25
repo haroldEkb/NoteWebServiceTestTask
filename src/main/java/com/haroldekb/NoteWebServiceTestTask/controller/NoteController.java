@@ -28,15 +28,20 @@ public class NoteController {
     @PostConstruct
     private void init(){
         List<Note> notes = new ArrayList<>();
-        notes.add(new Note("123", "qweqwe"));
+        notes.add(new Note("123", "123qweqwe"));
         notes.add(new Note("456", "asdsafd"));
-        notes.add(new Note("", "xvcxcxvvcx"));
+        notes.add(new Note("", "123xvcxcxvvcx"));
         service.saveAll(notes);
     }
 
     @GetMapping("/")
-    public String showAllNotes(Model model){
-        List<Note> notes = service.getAllNotes();
+    public String search(@RequestParam(required = false, value = "search") String search, Model model){
+        List<Note> notes;
+        if (search != null && !search.equals("")) {
+            notes = service.searchContaining(search);
+        } else {
+            notes = service.getAllNotes();
+        }
         model.addAttribute("notes", notes);
         return "index";
     }

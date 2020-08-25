@@ -15,18 +15,32 @@
 
     <h1>Note List</h1>
 
-    <a th:href="@{/add}" class="btn btn-primary" role="button">New note</a>
+    <div class="row">
+        <div class="col">
+            <a th:href="@{/add}" class="btn btn-primary" role="button">New note</a>
+        </div>
+        <div class="col">
+            <form th:action="@{/}" method="get">
+            <span style="form-control">
+                <input type="search" id="mySearch" name="search" placeholder="Search">
+                <button>Search</button>
+            </span>
+            </form>
+        </div>
+    </div>
     <br>
     <table class="table">
         <thead class="thead-dark">
         <tr>
-            <th scope="col">Note</th>
+            <th scope="col">Note name</th>
+            <th scope="col">Note content</th>
             <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="note : ${notes}">
             <td th:text="${note.name != ''}? ${note.name} : ${note.content}"/>
+            <td th:text="${note.content}"/>
             <td>
                 <a th:href="@{'/delete?id=' + ${note.id}}" class="btn btn-danger">Delete</a>
             </td>

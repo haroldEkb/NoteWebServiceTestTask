@@ -16,4 +16,6 @@ public interface NoteService {
     void deleteNoteById(Integer id);
 
     boolean doExistById(Integer id);
+
+    List<Note> searchContaining(String search);
 }
