@@ -1,15 +1,14 @@
 package com.haroldekb.NoteWebServiceTestTask.repository;
 
 import com.haroldekb.NoteWebServiceTestTask.entity.Note;
-import com.haroldekb.NoteWebServiceTestTask.repository.NoteRepository;
-import com.sun.org.apache.bcel.internal.generic.ANEWARRAY;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ContextConfiguration;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,55 +16,54 @@ import java.util.List;
  **/
 
 @DataJpaTest
+@ContextConfiguration(classes = NoteRepositoryTestConfiguration.class)
 public class NoteRepositoryTest {
 
     @Autowired
     private NoteRepository repository;
 
-    private List<Note> testNotes = new ArrayList<>();
-    private List<Note> searchNotes = new ArrayList<>();
+    @Autowired
+    @Qualifier("testNotes")
+    private List<Note> testNotes;
+
+    @Autowired
+    @Qualifier("searchNotes")
+    private List<Note> searchNotes;
 
     @BeforeEach
-    public void setup(){
-        repository.saveAll(initTestNotes());
-        initSearchNotes();
+    void setUp() {
+        repository.saveAll(testNotes);
     }
 
     @Test
     void searchInNameAndContent1(){
         List<Note> notes = repository.findByNameContainingIgnoreCaseOrContentContainingIgnoreCase("123", "123");
-        Assert.assertNotNull(notes);
+        Assertions.assertNotNull(notes);
+        Assertions.assertTrue(notes.size() != 0);
     }
 
     @Test
     void searchInNameAndContent2(){
         List<Note> notes = repository.findByNameContainingIgnoreCaseOrContentContainingIgnoreCase("123", "123");
-        Assert.assertEquals(3, notes.size());
+        Assertions.assertEquals(3, notes.size());
     }
 
     @Test
     void searchInNameAndContent3(){
         List<Note> notes = repository.findByNameContainingIgnoreCaseOrContentContainingIgnoreCase("123", "123");
         boolean flag = true;
-        for (Note searchNote : searchNotes) {
-            flag = notes.contains(searchNote);
+        for (Note note : notes) {
+            System.out.println(note);
         }
-        Assert.assertTrue(flag);
+        for (Note searchNote : searchNotes) {
+            System.out.println(searchNote);
+            if (!notes.contains(searchNote)) {
+                flag = false;
+                break;
+            }
+        }
+        Assertions.assertTrue(flag);
     }
 
-    private List<Note> initTestNotes(){
-        testNotes.add(new Note(1, "xvxcv123tgttg", "thh123qweqwe"));
-        testNotes.add(new Note(2, "456", "asdsafd"));
-        testNotes.add(new Note(3, "wqe123qwe", "34435xvcxcxvvcx"));
-        testNotes.add(new Note(4, "", "123xvcxcxvvcx"));
-        return testNotes;
-    }
 
-    private List<Note> initSearchNotes(){
-        searchNotes.add(new Note(1, "123", "123qweqwe"));
-        searchNotes.add(new Note(2, "456", "asdsafd"));
-        searchNotes.add(new Note(3, "wqe123qwe", "34435xvcxcxvvcx"));
-        searchNotes.add(new Note(4, "", "123xvcxcxvvcx"));
-        return searchNotes;
-    }
 }
