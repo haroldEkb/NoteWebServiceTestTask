@@ -8,8 +8,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * @author haroldekb@mail.ru
@@ -25,17 +29,8 @@ public class NoteController {
         this.service = service;
     }
 
-    @PostConstruct
-    private void init(){
-        List<Note> notes = new ArrayList<>();
-        notes.add(new Note("123", "123qweqwe"));
-        notes.add(new Note("456", "asdsafd"));
-        notes.add(new Note("", "123xvcxcxvvcx"));
-        service.saveAll(notes);
-    }
-
     @GetMapping("/")
-    public String search(@RequestParam(required = false, value = "search") String search, Model model){
+    public String showNotes(@RequestParam(required = false, value = "search") String search, Model model){
         List<Note> notes;
         if (search != null && !search.equals("")) {
             notes = service.searchContaining(search);
@@ -46,9 +41,11 @@ public class NoteController {
         return "index";
     }
 
-    //Нужно ли сообщать клиенту, что такой записи не было?
     @GetMapping("/delete")
-    public String deleteNote(@RequestParam("id")  Integer id, Model model){
+    public String deleteNote(@RequestParam("id")  Integer id){
+        if (!service.doExistById(id)){
+            throw new NoSuchElementException("There is no note with such id");
+        }
         service.deleteNoteById(id);
         return "redirect:/";
     }
@@ -60,8 +57,20 @@ public class NoteController {
     }
 
     @PostMapping("/add")
-    public String addNote(@ModelAttribute(name = "note") Note newNote){
+    public String addNote(@ModelAttribute(name = "note") Note newNote, HttpServletResponse response){
+        if (newNote == null || newNote.isEmpty()) {
+            throw new NullPointerException("Note is empty");
+        }
         service.save(newNote);
         return "redirect:/";
+    }
+
+    @ExceptionHandler({NoSuchElementException.class, NullPointerException.class})
+    public String handleError(Model model, HttpServletRequest request,
+                              HttpServletResponse response, Exception ex) {
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        model.addAttribute("message", ex.getMessage());
+        model.addAttribute("id", Optional.ofNullable(request.getParameter("id")).orElseGet(String::new));
+        return "error";
     }
 }

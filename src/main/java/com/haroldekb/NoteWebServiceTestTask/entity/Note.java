@@ -73,4 +73,8 @@ public class Note {
     public int hashCode() {
         return Objects.hash(getId(), getName(), getContent());
     }
+
+    public boolean isEmpty() {
+        return name == null || name.equals("") && content == null || content.equals("");
+    }
 }

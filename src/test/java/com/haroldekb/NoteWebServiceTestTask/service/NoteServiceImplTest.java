@@ -93,7 +93,6 @@ public class NoteServiceImplTest {
 
     @Test
     void deleteTest() {
-        when(repository.existsById(anyInt())).thenReturn(true);
         service.deleteNoteById(13);
         verify(repository).deleteById(anyInt());
     }
