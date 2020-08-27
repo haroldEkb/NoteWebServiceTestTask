@@ -6,11 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -30,7 +29,7 @@ public class NoteController {
     }
 
     @GetMapping("/")
-    public String showNotes(@RequestParam(required = false, value = "search") String search, Model model){
+    public String showNotes(@RequestParam(required = false, value = "search") String search, Model model, @ModelAttribute("message") String message){
         List<Note> notes;
         if (search != null && !search.equals("")) {
             notes = service.searchContaining(search);
@@ -38,15 +37,17 @@ public class NoteController {
             notes = service.getAllNotes();
         }
         model.addAttribute("notes", notes);
+        if (message != null) model.addAttribute("message", message);
         return "index";
     }
 
     @GetMapping("/delete")
-    public String deleteNote(@RequestParam("id")  Integer id){
+    public String deleteNote(@RequestParam("id")  Integer id, HttpServletResponse response, RedirectAttributes attributes){
         if (!service.doExistById(id)){
             throw new NoSuchElementException("There is no note with such id");
         }
         service.deleteNoteById(id);
+        attributes.addAttribute("message", "Note is successfully deleted");
         return "redirect:/";
     }
 
@@ -57,11 +58,12 @@ public class NoteController {
     }
 
     @PostMapping("/add")
-    public String addNote(@ModelAttribute(name = "note") Note newNote, HttpServletResponse response){
+    public String addNote(@ModelAttribute(name = "note") Note newNote, RedirectAttributes attributes){
         if (newNote == null || newNote.isEmpty()) {
             throw new NullPointerException("Note is empty");
         }
         service.save(newNote);
+        attributes.addAttribute("message", "New note is successfully added");
         return "redirect:/";
     }
 
