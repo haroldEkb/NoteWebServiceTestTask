@@ -1,4 +1,4 @@
-package com.haroldekb.NoteWebServiceTestTask.repository;
+package com.haroldekb.NoteWebServiceTestTask;
 
 import com.haroldekb.NoteWebServiceTestTask.entity.Note;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TestConfiguration
-public class NoteRepositoryTestConfiguration {
+public class NoteTestConfiguration {
 
     @Bean("testNotes")
     public List<Note> testNotes(){

@@ -1,5 +1,6 @@
 package com.haroldekb.NoteWebServiceTestTask.repository;
 
+import com.haroldekb.NoteWebServiceTestTask.NoteTestConfiguration;
 import com.haroldekb.NoteWebServiceTestTask.entity.Note;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +17,7 @@ import java.util.List;
  **/
 
 @DataJpaTest
-@ContextConfiguration(classes = NoteRepositoryTestConfiguration.class)
+@ContextConfiguration(classes = NoteTestConfiguration.class)
 public class NoteRepositoryTest {
 
     @Autowired

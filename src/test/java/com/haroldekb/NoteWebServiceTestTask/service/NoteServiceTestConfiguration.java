@@ -1,13 +1,13 @@
 package com.haroldekb.NoteWebServiceTestTask.service;
 
 import com.haroldekb.NoteWebServiceTestTask.entity.Note;
-import com.haroldekb.NoteWebServiceTestTask.repository.NoteRepositoryTestConfiguration;
+import com.haroldekb.NoteWebServiceTestTask.NoteTestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import(NoteRepositoryTestConfiguration.class)
+@Import(NoteTestConfiguration.class)
 public class NoteServiceTestConfiguration {
 
     @Bean("Note")
